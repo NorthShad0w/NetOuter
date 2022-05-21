@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/beevik/ntp v0.3.0
+	github.com/gosnmp/gosnmp v1.34.0
 	github.com/lucas-clemente/quic-go v0.27.0
 )
 
@@ -11,7 +12,6 @@ require (
 	github.com/cheekybits/genny v1.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
-	github.com/gosnmp/gosnmp v1.34.0 // indirect
 	github.com/marten-seemann/qpack v0.2.1 // indirect
 	github.com/marten-seemann/qtls-go1-16 v0.1.5 // indirect
 	github.com/marten-seemann/qtls-go1-17 v0.1.1 // indirect
