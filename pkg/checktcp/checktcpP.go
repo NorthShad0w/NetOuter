@@ -28,7 +28,7 @@ func ChecktcpP(targets_ports_path string) {
 		}
 	}
 	for _, targets := range targetslist {
-		ip_ports := "45.79.204.144" + targets
+		ip_ports := "45.79.204.144:" + targets
 		Checktcp(ip_ports)
 	}
 }

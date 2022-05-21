@@ -26,10 +26,10 @@ func main() {
 		checktcp.Checktcp("39.156.66.14:80")
 		checktcp.Checktcp("39.156.66.14:443")
 		checktcp.Checktcp("114.114.114.114:53")
-	} else if mode == "cus_ip_tcp" {
+	} else if mode == "a" {
 		targets_file_path := os.Args[2]
 		checktcp.ChecktcpM(targets_file_path)
-	} else if mode == "cus_port_tcp" {
+	} else if mode == "b" {
 		targets_ports_path := os.Args[2]
 		checktcp.ChecktcpP(targets_ports_path)
 
