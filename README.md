@@ -36,31 +36,38 @@ GOOS="windows" GOARCH=amd64 CGO_ENABLED=0 go build -ldflags "-w -s" -o target/re
 
 ### 命令行用法
 
-#### 测试常规出网可能性
-
-这个基本够用吧，一些公开服务有不变地址的就写死在里面包括。
-- windows ntp  
-- 114 dns
-- local dns
-- cloudflare quic
-- baidu 80
-- baidu 443
-- 114 tcp dns
-
+#### 测试常规出网可能性 - 推荐
 
 ```bash
 NetOuter d
 ```
 
-#### 测试自定义tcp端口出网可能性
+硬编码测试以下公开服务
 
-一些端口比如22，公开的服务器可能不是一直开着22，也不好写死
+- windows ntp  
+- 114 dns
+- local dns
+- cloudflare quic
+- 百度 tcp 80
+- 百度 tcp 443
+- 114 tcp dns
 
+
+
+#### 测试自定义tcp端口出网可能性，无法硬编码的端口，可以上fofa找端口
+
+文件名随意
 ```bash
-NetOuter tcp ./targets.txt
+NetOuter a ./targets.txt
 ```
 
-端口就fofa上找公开的  
+fofa语法
+
+```
+port="69"
+```
+
+例子：
 targets.txt  
 
 ```texinfo
@@ -72,31 +79,73 @@ targets.txt
 192.168.1.1:3389
 ```
 
-#### 测试snmp出网可能性
+#### 利用老外公开的一个1-65535全开的服务器测试出网，注意该服务器在美国不是很opsec
 
-udp 161 出网我遇到过，这也不好写死。
-windows下调用这个方法 defender报毒不知道为什么。
+文件名随意
 
+```bash
+NetOuter b ./targets.txt
+```
+
+源码configs目录下有top open ports 可以直接上传使用
+
+例子：
+targets.txt  
+
+```texinfo
+21
+22
+23
+25
+3306
+3389
+```
+
+#### 测试snmp出网可能性，注意，window下defender可能行为报毒
+
+udp 161 出网 不好硬编码  
+fofa可以找公开
+
+```
+port="161"
+```
+
+不用加端口
 ```bash
 NetOuter snmp 192.168.1.1
 ```
 
 #### 测试tftp出网
 
-udp 69 我还没遇到过
+UDP 69出网 不好硬编码  
+fofa可以找公开
+
+```
+port="69"
+```
+
+不用加端口
+```
+NetOuter snmp 192.168.1.1
+```
 
 #### 测试icmp出网
 
-发icmp包要管理员权限，ping 默认是setuid的。
+直接发icmp包要管理员权限，ping 默认是setuid的，建议出网测试时顺手ping一下吧，就不集成到软件里了
 
 ```bash
 ping 114.114.114.114
 ```
 
+#### TODO
+
+UDP 162,623,10161,10162
+tcp测试 使用golang特性加快
+
+
 #### 还有其他的出网方式就是基于代理出网 sock/http/https
 
-这个需要信息收集，针对不同的机器收集路由，配置的代理ip端口用户密码
-不是很好写死。
+这个需要信息收集，针对不同的机器收集路由和配置的代理ip端口用户密码
 
 
 
