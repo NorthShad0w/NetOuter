@@ -128,7 +128,7 @@ port="69"
 
 不用加端口
 ```
-NetOuter snmp 192.168.1.1
+NetOuter tftp 192.168.1.1
 ```
 
 #### 测试icmp出网
