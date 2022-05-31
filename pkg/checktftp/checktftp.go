@@ -20,9 +20,9 @@ func Checktftp(target string) {
 
 	_, err = bufio.NewReader(conn).Read(p)
 	if p[3] != 0 {
-		fmt.Println("UDP 69 can use")
+		fmt.Println("[*] UDP 69  can access the internet")
 		return
 	}
-	fmt.Println("UDP 69 May blocked")
+	fmt.Println("[-] UDP 69  May blocked")
 	conn.Close()
 }

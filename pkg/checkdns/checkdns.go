@@ -18,19 +18,18 @@ func CheckDirectDNS() {
 		},
 	}
 	_, err := r.LookupHost(context.Background(), "www.baidu.com")
-    if err != nil {
-        fmt.Println("[-] UDP 53 is blocked")
-    } else {
-        fmt.Println("[*] UDP 53 can access the internet")
-    }
-
+	if err != nil {
+		fmt.Println("[-] UDP 53  is blocked")
+	} else {
+		fmt.Println("[*] UDP 53  can access the internet")
+	}
 
 }
 
 func CheckLocalDNS() {
 	_, err := net.LookupHost("www.baidu.com")
 	if err != nil {
-        fmt.Println("[-] DNS resolve is blocked")
+		fmt.Println("[-] DNS resolve is blocked")
 	}
-    fmt.Println("[*] DNS tunnel is allowed")
+	fmt.Println("[*] DNS tunnel is allowed")
 }

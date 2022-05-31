@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-func Checktcp(address string) {
-	conn, err := net.DialTimeout("tcp", address, 2*time.Second)
+func Checktcp(address string, port string) {
+	conn, err := net.DialTimeout("tcp", address+":"+port, 2*time.Second)
 	if err != nil {
-		fmt.Println(address + "blocked")
+		fmt.Println("[-] tcp", port, "blocked")
 		return
 	}
 	conn.Close()
-	fmt.Println(address + " can access")
+	fmt.Println("[*] tcp", port, "can access internet")
 	return
 }

@@ -2,40 +2,57 @@ package main
 
 import (
 	"NetOuter/pkg/checkdns"
+	"NetOuter/pkg/checkhttp"
+	"NetOuter/pkg/checkicmp"
 	"NetOuter/pkg/checkntp"
-	"NetOuter/pkg/checkquic"
 	"NetOuter/pkg/checksnmp"
 	"NetOuter/pkg/checktcp"
 	"NetOuter/pkg/checktftp"
-
-	"fmt"
+	"flag"
 	"os"
 )
 
+var version = "0.1.0"
+
+var (
+	tcpFullCheckPtr *bool
+	snmpCheckPtr    *bool
+	tftpCheckPtr    *bool
+	customip        *string
+)
+
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("error")
-		return
+
+	tcpFullCheckPtr = flag.Bool("tcp", false, "TCP 1-65535 full check use allports.exposed slow")
+	snmpCheckPtr = flag.Bool("snmp", false, "snmp custom ip check")
+	tftpCheckPtr = flag.Bool("tftp", false, "tftp custom ip check")
+	customip = flag.String("ip", "1.1.1.1", "custom ip for snmp or tftp")
+
+	flag.Parse()
+
+	if *snmpCheckPtr {
+		checksnmp.Checksnmp(*customip)
+		os.Exit(0)
 	}
-	mode := os.Args[1]
-	if mode == "d" {
+	if *tftpCheckPtr {
+		checktftp.Checktftp(*customip)
+		os.Exit(0)
+	}
+
+	if *tcpFullCheckPtr {
+		checktcp.CheckALLtcp()
+	} else {
+
 		checkntp.Checkntp()
+		checksnmp.Checksnmp("116.162.120.19")
+		checktftp.Checktftp("183.62.177.78")
 		checkdns.CheckDirectDNS()
 		checkdns.CheckLocalDNS()
-		checkquic.Checkquic()
-		checktcp.Checktcp("39.156.66.14:80")
-		checktcp.Checktcp("39.156.66.14:443")
-		checktcp.Checktcp("114.114.114.114:53")
-	} else if mode == "a" {
-		targets_file_path := os.Args[2]
-		checktcp.ChecktcpM(targets_file_path)
-	} else if mode == "b" {
-		targets_ports_path := os.Args[2]
-		checktcp.ChecktcpP(targets_ports_path)
-
-	} else if mode == "snmp" {
-		checksnmp.Checksnmp(os.Args[2])
-	} else if mode == "tftp" {
-		checktftp.Checktftp(os.Args[2])
+		checkicmp.Checkicmp()
+		checkhttp.Checkhttp()
+		checktcp.Checktcp("45.79.204.144", "22")
+		checktcp.Checktcp("220.181.38.148", "80")
+		checktcp.Checktcp("220.181.38.148", "443")
 	}
+
 }
