@@ -50,7 +50,15 @@ NetOuter
 
 端口太多比较慢
 
+```
 NetOuter -tcp
+```
+
+#### tcp指定端口
+
+```
+NetOuter -port 8080
+```
 
 #### TODO
 
