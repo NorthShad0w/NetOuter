@@ -40,104 +40,17 @@ GOOS="windows" GOARCH=amd64 CGO_ENABLED=0 go build -ldflags "-w -s" -o target/re
 
 #### 测试常规出网可能性 - 推荐
 
-```bash
-NetOuter d
-```
-
-硬编码测试以下公开服务
-
-- windows ntp  
-- 114 dns
-- local dns
-- cloudflare quic
-- 百度 tcp 80
-- 百度 tcp 443
-- 114 tcp dns
-
-
-
-#### 测试自定义tcp端口出网可能性，无法硬编码的端口，可以上fofa找端口
-
-文件名随意
-```bash
-NetOuter a ./targets.txt
-```
-
-fofa语法
-
-```
-port="69"
-```
-
-例子：
-targets.txt  
-
-```texinfo
-192.168.1.1:21
-192.168.1.1:22
-192.168.1.1:23
-192.168.1.1:25
-192.168.1.1:3306
-192.168.1.1:3389
-```
-
-#### 利用老外公开的一个1-65535全开的服务器测试出网，注意该服务器在美国不是很opsec
-
-文件名随意
+直接运行
 
 ```bash
-NetOuter b ./targets.txt
+NetOuter
 ```
 
-源码configs目录下有top open ports 可以直接上传使用
+#### tcp全端口
 
-例子：
-targets.txt  
+端口太多比较慢
 
-```texinfo
-21
-22
-23
-25
-3306
-3389
-```
-
-#### 测试snmp出网可能性，注意，window下defender可能行为报毒
-
-udp 161 出网 不好硬编码  
-fofa可以找公开
-
-```
-port="161"
-```
-
-不用加端口
-```bash
-NetOuter snmp 192.168.1.1
-```
-
-#### 测试tftp出网
-
-UDP 69出网 不好硬编码  
-fofa可以找公开
-
-```
-port="69"
-```
-
-不用加端口
-```
-NetOuter tftp 192.168.1.1
-```
-
-#### 测试icmp出网
-
-直接发icmp包要管理员权限，ping 默认是setuid的，建议出网测试时顺手ping一下吧，就不集成到软件里了
-
-```bash
-ping 114.114.114.114
-```
+NetOuter -tcp
 
 #### TODO
 
