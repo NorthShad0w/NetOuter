@@ -10,6 +10,7 @@ import (
 	"NetOuter/pkg/checktftp"
 	"flag"
 	"os"
+	"strconv"
 )
 
 var version = "0.1.0"
@@ -19,6 +20,7 @@ var (
 	snmpCheckPtr    *bool
 	tftpCheckPtr    *bool
 	customip        *string
+	tcpport         *int
 )
 
 func main() {
@@ -27,8 +29,14 @@ func main() {
 	snmpCheckPtr = flag.Bool("snmp", false, "snmp custom ip check")
 	tftpCheckPtr = flag.Bool("tftp", false, "tftp custom ip check")
 	customip = flag.String("ip", "1.1.1.1", "custom ip for snmp or tftp")
+	tcpport = flag.Int("port", 9999999, "custom tcp port")
 
 	flag.Parse()
+
+	if *tcpport != 9999999 {
+		checktcp.Checktcp("45.79.204.144", strconv.Itoa(*tcpport))
+		os.Exit(0)
+	}
 
 	if *snmpCheckPtr {
 		checksnmp.Checksnmp(*customip)
