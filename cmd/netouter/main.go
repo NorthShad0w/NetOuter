@@ -17,16 +17,16 @@ var version = "0.1.0"
 
 // flag pointers
 var (
-	tcpFullCheckPtr *bool
-	snmpCheckPtr    *bool
-	tftpCheckPtr    *bool
-	customip        *string
-	tcpport         *int
+	tcpCheckPtr  *string
+	snmpCheckPtr *bool
+	tftpCheckPtr *bool
+	customip     *string
+	tcpport      *int
 )
 
 func main() {
 
-	tcpFullCheckPtr = flag.Bool("tcp", false, "TCP 1-65535 full check use allports.exposed slow")
+	tcpCheckPtr = flag.String("tcp", "no", "TCP Check method: all default")
 	snmpCheckPtr = flag.Bool("snmp", false, "snmp custom ip check")
 	tftpCheckPtr = flag.Bool("tftp", false, "tftp custom ip check")
 	customip = flag.String("ip", "1.1.1.1", "custom ip for snmp or tftp")
@@ -48,10 +48,11 @@ func main() {
 		os.Exit(0)
 	}
 
-	if *tcpFullCheckPtr {
+	if *tcpCheckPtr == "all" {
 		checktcp.CheckALLtcp()
+	} else if *tcpCheckPtr == "default" {
+		checktcp.CheckDTCP()
 	} else {
-
 		checkntp.Checkntp()
 		checksnmp.Checksnmp("116.162.120.19")
 		checktftp.Checktftp("183.62.177.78")
