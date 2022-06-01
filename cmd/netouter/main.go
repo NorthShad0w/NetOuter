@@ -15,6 +15,7 @@ import (
 
 var version = "0.1.0"
 
+// flag pointers
 var (
 	tcpFullCheckPtr *bool
 	snmpCheckPtr    *bool
