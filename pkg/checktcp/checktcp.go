@@ -9,7 +9,7 @@ import (
 func ChecktcpN(address string, port string, checknumPtr *int) {
 	conn, err := net.DialTimeout("tcp", address+":"+port, 2*time.Second)
 	if err != nil {
-		fmt.Println("[-] tcp", port, "blocked")
+		//fmt.Println("[-] tcp", port, "blocked")
 		return
 	}
 	conn.Close()
@@ -20,7 +20,7 @@ func ChecktcpN(address string, port string, checknumPtr *int) {
 func Checktcp(address string, port string) {
 	conn, err := net.DialTimeout("tcp", address+":"+port, 2*time.Second)
 	if err != nil {
-		fmt.Println("[-] tcp", port, "blocked")
+		//fmt.Println("[-] tcp", port, "blocked")
 		return
 	}
 	conn.Close()
