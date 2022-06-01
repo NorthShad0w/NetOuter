@@ -24,17 +24,11 @@ target目录下文件
 
 ### 编译
 
-#### linux版本
-
-```bash
-CGO_ENABLED=0 go build -ldflags "-w -s" -o target/release/NetOuter ./cmd/netouter/main.go
+```
+make
 ```
 
-#### windows版本
-
-```bash
-GOOS="windows" GOARCH=amd64 CGO_ENABLED=0 go build -ldflags "-w -s" -o target/release/NetOuter.exe ./cmd/netouter/main.go
-```
+最终文件在`target/release`目录下
 
 ### 命令行用法
 
@@ -46,12 +40,21 @@ GOOS="windows" GOARCH=amd64 CGO_ENABLED=0 go build -ldflags "-w -s" -o target/re
 NetOuter
 ```
 
-#### tcp全端口
+#### tcp出网测试
 
-端口太多比较慢
+端口太多可能比较慢  
+当发现超过3个可出网端口就停止
+
+全端口
 
 ```
-NetOuter -tcp
+NetOuter -tcp all
+```
+
+默认端口
+
+```
+NetOuter -tcp default
 ```
 
 #### tcp指定端口
