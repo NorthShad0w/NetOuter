@@ -12,13 +12,13 @@ install:
 	go install
 
 darwin:
-	GOOS=darwin GOARCH=amd64 go build -ldflags="$(LD_FLAGS)" -o '$(BIN_DIR)/$(BIN_NAME)-darwin-amd64' ./cmd/netouter/main.go
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$(LD_FLAGS)" -o '$(BIN_DIR)/$(BIN_NAME)-darwin-amd64' ./cmd/netouter/main.go
 
 linux:
-	GOOS=linux GOARCH=amd64 go build -ldflags="$(LD_FLAGS)" -o '$(BIN_DIR)/$(BIN_NAME)-linux-amd64' ./cmd/netouter/main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$(LD_FLAGS)" -o '$(BIN_DIR)/$(BIN_NAME)-linux-amd64' ./cmd/netouter/main.go
 
 windows:
-	GOOS=windows GOARCH=amd64 go build -ldflags="$(LD_FLAGS)" -o '$(BIN_DIR)/$(BIN_NAME)-windows-amd64.exe' ./cmd/netouter/main.go
+	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags="$(LD_FLAGS)" -o '$(BIN_DIR)/$(BIN_NAME)-windows-amd64.exe' ./cmd/netouter/main.go
 
 integrity:
 	cd $(BIN_DIR) && shasum *
