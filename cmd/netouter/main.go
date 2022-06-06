@@ -2,7 +2,7 @@ package main
 
 import (
 	"NetOuter/pkg/checkdns"
-	"NetOuter/pkg/checkhttp"
+	// "NetOuter/pkg/checkhttp"
 	"NetOuter/pkg/checkicmp"
 	"NetOuter/pkg/checkntp"
 	"NetOuter/pkg/checksnmp"
@@ -11,7 +11,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"strconv"
+	"sync"
 )
 
 var version = "0.1.0"
@@ -25,6 +25,8 @@ var (
 	tcpport      *int
 )
 
+var wg sync.WaitGroup
+
 func main() {
 
 	tcpCheckPtr = flag.String("tcp", "", "Check egress for all tcp ports. Example: ./netout -tcp all")
@@ -36,34 +38,45 @@ func main() {
 	flag.Parse()
 
 	if *tcpport != 9999999 {
-		checktcp.Checktcp("45.79.204.144", strconv.Itoa(*tcpport))
 		os.Exit(0)
 	}
 
 	if *snmpCheckPtr {
-		checksnmp.Checksnmp(*customip)
 		os.Exit(0)
 	}
 	if *tftpCheckPtr {
-		checktftp.Checktftp(*customip)
 		os.Exit(0)
 	}
 
 	if *tcpCheckPtr == "all" {
 		fmt.Println("[!] All check may take a few minutes to be done, consider using default checking first.")
+		fmt.Println("[!] No output means all tcp ports was blocked")
 		checktcp.CheckALLtcp()
-	} else {
-		checkntp.Checkntp()
-		checksnmp.Checksnmp("116.162.120.19")
-		checktftp.Checktftp("183.62.177.78")
-		checkdns.CheckDirectDNS()
-		checkdns.CheckLocalDNS()
-		checkicmp.Checkicmp()
-		checkhttp.Checkhttp()
-		checktcp.Checktcp("220.181.38.148", "80")
-		checktcp.Checktcp("220.181.38.148", "443")
-		fmt.Println("[!] Starting default TCP egress check, may take a few minutes to be done.Please Wait patiently.")
+
+	} else if *tcpCheckPtr == "test" {
+
 		checktcp.CheckDTCP()
+
+	} else {
+
+		// resp := checkdns.CheckLocalDNS()
+		// if resp {
+		// 	checkhttp.Checkhttp()
+		// }
+		wg.Add(7)
+
+		go checkntp.Checkntp(&wg)
+		go checksnmp.Checksnmp("116.162.120.19", &wg)
+		go checktftp.Checktftp("183.62.177.78", &wg)
+		go checkdns.CheckDirectDNS(&wg)
+		go checkicmp.Checkicmp(&wg)
+		go checktcp.Checktcp("220.181.38.148", "80", &wg)
+		go checktcp.Checktcp("220.181.38.148", "443", &wg)
+		fmt.Println("[!] Starting default TCP egress check, may take a few minutes to be done.Please Wait patiently.")
+		wg.Wait()
+		print(1)
+		checktcp.CheckDTCP()
+		fmt.Println("[!] finished! No tcp output means all tcp ports was blocked")
 	}
 
 }

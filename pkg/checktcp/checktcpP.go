@@ -27,12 +27,13 @@ func testHTTPEgress(port int) bool {
 
 	transport := &http.Transport{}
 
-	timeout := time.Duration(40000) * time.Second
+	timeout := time.Duration(1000) * time.Second
 
 	client := http.Client{
 		Timeout:   timeout,
 		Transport: transport,
 	}
+
 	resp, err := client.Get(url)
 	if err != nil {
 		return false
@@ -77,7 +78,7 @@ func CheckTCP_port_range(ports []int) {
 	allowed_ports_number := 0
 
 	mwg := maxedWaitGroup{
-		current: make(chan int, 50),
+		current: make(chan int, 300),
 		wg:      sync.WaitGroup{},
 	}
 
@@ -104,6 +105,7 @@ func CheckTCP_port_range(ports []int) {
 				if resp {
 					allowed_ports_number++
 				}
+				return
 			}(port)
 		}
 		if allowed_ports_number > 3 {

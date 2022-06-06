@@ -4,14 +4,18 @@ import (
 	"bufio"
 	"fmt"
 	"net"
+	"sync"
 	"time"
 )
 
-func Checktftp(target string) {
+func Checktftp(target string, wg *sync.WaitGroup) {
+
+	defer wg.Done()
+
 	p := make([]byte, 2048)
 	to_sent := []byte{0x00, 0x01, 0x31, 0x2e, 0x74, 0x78, 0x74, 0x00, 0x6e, 0x65, 0x74, 0x61, 0x73, 0x63, 0x69, 0x69}
 	conn, err := net.Dial("udp", target+":69")
-	conn.SetDeadline(time.Now().Add(2 * time.Second))
+	conn.SetDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
 		fmt.Printf("Some error %v", err)
 		return
@@ -25,4 +29,5 @@ func Checktftp(target string) {
 	}
 	fmt.Println("[-] UDP 69  May blocked")
 	conn.Close()
+	return
 }

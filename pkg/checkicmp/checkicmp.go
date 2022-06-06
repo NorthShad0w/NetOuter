@@ -5,9 +5,11 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
+	"sync"
 )
 
-func Checkicmp() {
+func Checkicmp(wg *sync.WaitGroup) {
+	defer wg.Done()
 	switch runtime.GOOS {
 	case "windows":
 		cmd := exec.Command("ping.exe", "-n", "1", "114.114.114.114")

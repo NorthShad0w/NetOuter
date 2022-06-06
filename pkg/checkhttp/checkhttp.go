@@ -3,6 +3,7 @@ package checkhttp
 import (
 	"fmt"
 	"net/http"
+	"time"
 )
 
 var white_domainname [4]string = [...]string{
@@ -15,7 +16,16 @@ var white_domainname [4]string = [...]string{
 func Checkhttp() {
 
 	for _, domain := range white_domainname {
-		resp, err := http.Get("http://" + domain + "/")
+		transport := &http.Transport{}
+
+		timeout := 1 * time.Second
+
+		client := http.Client{
+			Timeout:   timeout,
+			Transport: transport,
+		}
+
+		resp, err := client.Get("http://" + domain + "/")
 		if err != nil {
 			fmt.Println("[-] http  " + domain + "   was blocked")
 		}
@@ -23,4 +33,5 @@ func Checkhttp() {
 			fmt.Println("[*]", domain+"  http protocol is allowed")
 		}
 	}
+	return
 }
