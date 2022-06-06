@@ -26,7 +26,7 @@ var (
 
 func main() {
 
-	tcpCheckPtr = flag.String("tcp", "no", "TCP Check method: all default")
+	tcpCheckPtr = flag.String("tcp", "", "Check egress for all tcp ports. Example: ./netout -tcp all")
 	snmpCheckPtr = flag.Bool("snmp", false, "snmp custom ip check")
 	tftpCheckPtr = flag.Bool("tftp", false, "tftp custom ip check")
 	customip = flag.String("ip", "1.1.1.1", "custom ip for snmp or tftp")
@@ -50,8 +50,6 @@ func main() {
 
 	if *tcpCheckPtr == "all" {
 		checktcp.CheckALLtcp()
-	} else if *tcpCheckPtr == "default" {
-		checktcp.CheckDTCP()
 	} else {
 		checkntp.Checkntp()
 		checksnmp.Checksnmp("116.162.120.19")
@@ -60,9 +58,9 @@ func main() {
 		checkdns.CheckLocalDNS()
 		checkicmp.Checkicmp()
 		checkhttp.Checkhttp()
-		checktcp.Checktcp("45.79.204.144", "22")
 		checktcp.Checktcp("220.181.38.148", "80")
 		checktcp.Checktcp("220.181.38.148", "443")
+		checktcp.CheckDTCP()
 	}
 
 }

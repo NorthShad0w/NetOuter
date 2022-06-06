@@ -27,9 +27,13 @@ func CheckDirectDNS() {
 }
 
 func CheckLocalDNS() {
-	_, err := net.LookupHost("www.baidu.com")
+	resp, err := net.LookupHost("www.baidu.com")
 	if err != nil {
 		fmt.Println("[-] DNS resolve is blocked")
 	}
-	fmt.Println("[*] DNS tunnel is allowed")
+	if len(resp) > 0 {
+		fmt.Println("[*] DNS tunnel is allowed")
+	} else {
+		fmt.Println("[-] DNS resolve is blocked")
+	}
 }

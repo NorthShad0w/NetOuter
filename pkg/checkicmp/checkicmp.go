@@ -24,7 +24,7 @@ func Checkicmp() {
 		cmd := exec.Command("ping", "-c", "1", "114.114.114.114")
 		out, err := cmd.CombinedOutput()
 		if err != nil {
-			print("ping err")
+			print("[-] ICMP blocked")
 		}
 		if strings.Contains(string(out), "ttl") {
 			fmt.Println("[*] ICMP allowed")
