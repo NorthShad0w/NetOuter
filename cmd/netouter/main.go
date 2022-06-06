@@ -9,6 +9,7 @@ import (
 	"NetOuter/pkg/checktcp"
 	"NetOuter/pkg/checktftp"
 	"flag"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -49,6 +50,7 @@ func main() {
 	}
 
 	if *tcpCheckPtr == "all" {
+		fmt.Println("[!] All check may take a few minutes to be done, consider using default checking first.")
 		checktcp.CheckALLtcp()
 	} else {
 		checkntp.Checkntp()
@@ -60,6 +62,7 @@ func main() {
 		checkhttp.Checkhttp()
 		checktcp.Checktcp("220.181.38.148", "80")
 		checktcp.Checktcp("220.181.38.148", "443")
+		fmt.Println("[!] Starting default TCP egress check, may take a few minutes to be done.Please Wait patiently.")
 		checktcp.CheckDTCP()
 	}
 
