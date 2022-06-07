@@ -36,6 +36,7 @@ func main() {
 	tftpCheckPtr = flag.Bool("tftp", false, "tftp custom ip check")
 	customip = flag.String("ip", "1.1.1.1", "custom ip for snmp or tftp")
 	tcpport = flag.Int("port", 9999999, "custom tcp port")
+	quick := flag.Bool("quick", false, "quick check")
 
 	flag.Parse()
 
@@ -95,7 +96,9 @@ func main() {
 		go checktcp.Checktcp("220.181.38.148", "443", &wg)
 		wg.Wait()
 		log.Println("[!] Starting default TCP egress check, may take a few minutes to be done.Please Wait patiently.")
-		checktcp.CheckDTCP()
+		if !*quick {
+			checktcp.CheckDTCP()
+		}
 		log.Println("[!] finished! No tcp output means all tcp ports was blocked")
 	}
 
