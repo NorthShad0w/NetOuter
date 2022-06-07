@@ -2,15 +2,17 @@ package main
 
 import (
 	"NetOuter/pkg/checkdns"
-	// "NetOuter/pkg/checkhttp"
+	"NetOuter/pkg/checkhttp"
 	"NetOuter/pkg/checkicmp"
 	"NetOuter/pkg/checkntp"
 	"NetOuter/pkg/checksnmp"
 	"NetOuter/pkg/checktcp"
 	"NetOuter/pkg/checktftp"
 	"flag"
-	"fmt"
+	"io"
+	"log"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
@@ -37,6 +39,22 @@ func main() {
 
 	flag.Parse()
 
+	ex, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+
+	exPath := filepath.Dir(ex)
+
+	f, err := os.OpenFile(exPath+"/output.log", os.O_CREATE|os.O_APPEND|os.O_RDWR, os.ModePerm)
+	if err != nil {
+		return
+	}
+
+	defer func() {
+		f.Close()
+	}()
+
 	if *tcpport != 9999999 {
 		os.Exit(0)
 	}
@@ -48,9 +66,12 @@ func main() {
 		os.Exit(0)
 	}
 
+	multiWriter := io.MultiWriter(os.Stdout, f)
+	log.SetOutput(multiWriter)
+
 	if *tcpCheckPtr == "all" {
-		fmt.Println("[!] All check may take a few minutes to be done, consider using default checking first.")
-		fmt.Println("[!] No output means all tcp ports was blocked")
+		log.Println("[!] All check may take a few minutes to be done, consider using default checking first.")
+		log.Println("[!] No output means all tcp ports was blocked")
 		checktcp.CheckALLtcp()
 
 	} else if *tcpCheckPtr == "test" {
@@ -59,10 +80,10 @@ func main() {
 
 	} else {
 
-		// resp := checkdns.CheckLocalDNS()
-		// if resp {
-		// 	checkhttp.Checkhttp()
-		// }
+		resp := checkdns.CheckLocalDNS()
+		if resp {
+			checkhttp.Checkhttp()
+		}
 		wg.Add(7)
 
 		go checkntp.Checkntp(&wg)
@@ -72,11 +93,11 @@ func main() {
 		go checkicmp.Checkicmp(&wg)
 		go checktcp.Checktcp("220.181.38.148", "80", &wg)
 		go checktcp.Checktcp("220.181.38.148", "443", &wg)
-		fmt.Println("[!] Starting default TCP egress check, may take a few minutes to be done.Please Wait patiently.")
 		wg.Wait()
+		log.Println("[!] Starting default TCP egress check, may take a few minutes to be done.Please Wait patiently.")
 		print(1)
 		checktcp.CheckDTCP()
-		fmt.Println("[!] finished! No tcp output means all tcp ports was blocked")
+		log.Println("[!] finished! No tcp output means all tcp ports was blocked")
 	}
 
 }

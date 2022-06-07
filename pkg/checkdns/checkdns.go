@@ -2,7 +2,7 @@ package checkdns
 
 import (
 	"context"
-	"fmt"
+	"log"
 	"net"
 	"sync"
 	"time"
@@ -23,26 +23,31 @@ func CheckDirectDNS(wg *sync.WaitGroup) bool {
 	}
 	_, err := r.LookupHost(context.Background(), "www.baidu.com")
 	if err != nil {
-		fmt.Println("[-] UDP 53  is blocked")
+		log.Println("[-] UDP 53  is blocked")
 		return false
 	} else {
-		fmt.Println("[*] UDP 53  can access the internet")
+		log.Println("[*] UDP 53  can access the internet")
 		return true
 	}
 
 }
 
 func CheckLocalDNS() bool {
-	resp, err := net.LookupHost("www.baidu.com")
+	const timeout = 1 * time.Second
+	ctx, cancel := context.WithTimeout(context.TODO(), timeout)
+	defer cancel()
+	var r net.Resolver
+	resp, err := r.LookupHost(ctx, "www.baidu.com")
+
 	if err != nil {
-		fmt.Println("[-] DNS resolve is blocked")
+		log.Println("[-] DNS resolve is blocked")
 		return false
 	}
 	if len(resp) > 0 {
-		fmt.Println("[*] DNS tunnel is allowed")
+		log.Println("[*] DNS tunnel is allowed")
 		return true
 	} else {
-		fmt.Println("[-] DNS resolve is blocked")
+		log.Println("[-] DNS resolve is blocked")
 		return false
 	}
 }

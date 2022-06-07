@@ -3,6 +3,7 @@ package checksnmp
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"net"
 	"sync"
 	"time"
@@ -15,17 +16,17 @@ func Checksnmp(ip string, wg *sync.WaitGroup) {
 	conn, err := net.Dial("udp", ip+":161")
 	conn.SetDeadline(time.Now().Add(1 * time.Second))
 	if err != nil {
-		fmt.Printf("Some error %v", err)
+		log.Printf("Some error %v", err)
 		return
 	}
 	fmt.Fprintf(conn, string(to_sent))
 
 	_, err = bufio.NewReader(conn).Read(p)
 	if p[3] != 0 {
-		fmt.Println("[*] UDP 161 can access the internet")
+		log.Println("[*] UDP 161 can access the internet")
 		return
 	}
-	fmt.Println("[-] UDP 161 May blocked")
+	log.Println("[-] UDP 161 May blocked")
 	conn.Close()
 	return
 }

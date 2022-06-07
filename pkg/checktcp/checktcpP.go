@@ -1,7 +1,7 @@
 package checktcp
 
 import (
-	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -39,7 +39,7 @@ func testHTTPEgress(port int) bool {
 		return false
 	}
 	if resp != nil {
-		fmt.Printf("[*] tcp %s can access the internet\n", strconv.Itoa(port))
+		log.Printf("[*] tcp %s can access the internet\n", strconv.Itoa(port))
 		return true
 	}
 	return false
@@ -78,7 +78,7 @@ func CheckTCP_port_range(ports []int) {
 	allowed_ports_number := 0
 
 	mwg := maxedWaitGroup{
-		current: make(chan int, 300),
+		current: make(chan int, 100),
 		wg:      sync.WaitGroup{},
 	}
 
@@ -87,7 +87,7 @@ func CheckTCP_port_range(ports []int) {
 		//check the quit variable and terminate the checking.
 		//have some bugs I may fix it in the future.
 		if quit == true {
-			fmt.Println("[*] Found more than 3 ports can access the Internet. Stop further testing.")
+			log.Println("[*] Found more than 3 ports can access the Internet. Stop further testing.")
 			return
 		}
 
@@ -95,7 +95,7 @@ func CheckTCP_port_range(ports []int) {
 
 		switch {
 		case (quit == true):
-			fmt.Println("[*] Found more than 3 ports can access the Internet. Stop further testing.")
+			log.Println("[*] Found more than 3 ports can access the Internet. Stop further testing.")
 			return
 		default:
 			go func(p int) {

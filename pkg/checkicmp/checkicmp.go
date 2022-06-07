@@ -1,7 +1,7 @@
 package checkicmp
 
 import (
-	"fmt"
+	"log"
 	"os/exec"
 	"runtime"
 	"strings"
@@ -18,9 +18,9 @@ func Checkicmp(wg *sync.WaitGroup) {
 			print("ping err")
 		}
 		if strings.Contains(string(out), "TTL") {
-			fmt.Println("[*] ICMP allowed")
+			log.Println("[*] ICMP allowed")
 		} else {
-			fmt.Println("[-] ICMP blocked")
+			log.Println("[-] ICMP blocked")
 		}
 	default:
 		cmd := exec.Command("ping", "-c", "1", "114.114.114.114")
@@ -29,9 +29,9 @@ func Checkicmp(wg *sync.WaitGroup) {
 			print("[-] ICMP blocked")
 		}
 		if strings.Contains(string(out), "ttl") {
-			fmt.Println("[*] ICMP allowed")
+			log.Println("[*] ICMP allowed")
 		} else {
-			fmt.Println("[-] ICMP blocked")
+			log.Println("[-] ICMP blocked")
 		}
 	}
 }
