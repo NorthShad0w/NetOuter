@@ -95,7 +95,6 @@ func main() {
 		go checktcp.Checktcp("220.181.38.148", "443", &wg)
 		wg.Wait()
 		log.Println("[!] Starting default TCP egress check, may take a few minutes to be done.Please Wait patiently.")
-		print(1)
 		checktcp.CheckDTCP()
 		log.Println("[!] finished! No tcp output means all tcp ports was blocked")
 	}

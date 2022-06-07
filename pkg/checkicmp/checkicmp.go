@@ -15,7 +15,7 @@ func Checkicmp(wg *sync.WaitGroup) {
 		cmd := exec.Command("ping.exe", "-n", "1", "114.114.114.114")
 		out, err := cmd.CombinedOutput()
 		if err != nil {
-			print("ping err")
+			log.Println("[-] ICMP blocked")
 		}
 		if strings.Contains(string(out), "TTL") {
 			log.Println("[*] ICMP allowed")
@@ -26,7 +26,7 @@ func Checkicmp(wg *sync.WaitGroup) {
 		cmd := exec.Command("ping", "-c", "1", "114.114.114.114")
 		out, err := cmd.CombinedOutput()
 		if err != nil {
-			print("[-] ICMP blocked")
+			log.Println("[-] ICMP blocked")
 		}
 		if strings.Contains(string(out), "ttl") {
 			log.Println("[*] ICMP allowed")
